@@ -61,7 +61,9 @@ class _CastDetailsViewState extends State<CastDetailsView> {
                       height: media.width * 1.1,
                       child: ClipRect(
                         child: Image.asset(
-                          TColor.tModeDark ? "assets/img/michael_dark.png" : "assets/img/michael_light.png",
+                          TColor.tModeDark
+                              ? "assets/img/michael_dark.png"
+                              : "assets/img/michael_light.png",
                           width: media.width,
                           height: media.width,
                           fit: BoxFit.cover,
@@ -82,7 +84,6 @@ class _CastDetailsViewState extends State<CastDetailsView> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter)),
                     ),
-                    
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 20, horizontal: 15),
@@ -111,7 +112,6 @@ class _CastDetailsViewState extends State<CastDetailsView> {
                     )
                   ],
                 ),
-                
                 const SizedBox(
                   height: 15,
                 ),
@@ -128,7 +128,6 @@ class _CastDetailsViewState extends State<CastDetailsView> {
                 const SizedBox(
                   height: 15,
                 ),
-                
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(

@@ -11,8 +11,14 @@ import 'package:ott_platform_app/user_creator_card_screen.dart';
 import 'package:ott_platform_app/user_view/login/login_view.dart';
 import 'package:ott_platform_app/user_view/login/register_view.dart';
 import 'package:ott_platform_app/user_view/main_tab/main_tab_view.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -30,8 +36,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const SplashScreen(),
-
-
       routes: {
         '/registerview': (context) => RegisterView(),
         '/creatorregisterview': (context) => CreatorRegisterView(),
@@ -48,5 +52,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

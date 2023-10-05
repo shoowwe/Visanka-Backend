@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ott_platform_app/google_auth.dart';
 import 'package:ott_platform_app/user_view/login/register_view.dart';
 import 'package:ott_platform_app/user_view/main_tab/main_tab_view.dart';
 
@@ -23,7 +24,7 @@ class _LoginViewState extends State<LoginView> {
     var media = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: TColor.bg,
-     /* floatingActionButton: FloatingActionButton(
+      /* floatingActionButton: FloatingActionButton(
         backgroundColor: TColor.primary1,
         onPressed: () {
           TColor.tModeDark = !TColor.tModeDark;
@@ -110,10 +111,11 @@ class _LoginViewState extends State<LoginView> {
                     controller: txtPassword,
                     right: TextButton(
                       onPressed: () {
-                         Navigator.push(
+                        Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const ForgotPasswordView()));
+                                builder: (context) =>
+                                    const ForgotPasswordView()));
                       },
                       child: Text(
                         "FORGOT?",
@@ -130,7 +132,7 @@ class _LoginViewState extends State<LoginView> {
                   RoundButton(
                     title: "LOGIN",
                     onPressed: () {
-                       Navigator.pushNamed(context, '/maintabview');
+                      Navigator.pushNamed(context, '/maintabview');
                     },
                   ),
                   const SizedBox(
@@ -177,7 +179,10 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await AuthService().signInWithGoogle();
+                          Navigator.pushNamed(context, '/maintabview');
+                        },
                         icon: Image.asset(
                           "assets/img/google_btn.png",
                           width: 45,
@@ -189,7 +194,6 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(
                     height: 30,
                   ),
-
                   Text(
                     "Don’t have an account?",
                     style: TextStyle(
@@ -197,10 +201,12 @@ class _LoginViewState extends State<LoginView> {
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
                   ),
-
                   TextButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterView() ));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const RegisterView()));
                     },
                     child: Text(
                       "REGISTER",

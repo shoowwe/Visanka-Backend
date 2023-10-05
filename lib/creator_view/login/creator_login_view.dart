@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ott_platform_app/creator_view/login/creator_register_view.dart';
+import 'package:ott_platform_app/google_auth.dart';
 import 'package:ott_platform_app/user_view/login/register_view.dart';
 import 'package:ott_platform_app/user_view/main_tab/main_tab_view.dart';
+import 'package:ott_platform_app/google_auth.dart';
 
 import '../../common/color_extension.dart';
 import '../../common_widget/round_button.dart';
@@ -18,6 +20,7 @@ class CreatorLoginView extends StatefulWidget {
 class _CreatorLoginViewState extends State<CreatorLoginView> {
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
+  AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +114,11 @@ class _CreatorLoginViewState extends State<CreatorLoginView> {
                     controller: txtPassword,
                     right: TextButton(
                       onPressed: () {
-                         Navigator.push(
+                        Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const ForgotPasswordView()));
+                                builder: (context) =>
+                                    const ForgotPasswordView()));
                       },
                       child: Text(
                         "FORGOT?",
@@ -131,7 +135,7 @@ class _CreatorLoginViewState extends State<CreatorLoginView> {
                   RoundButton(
                     title: "LOGIN",
                     onPressed: () {
-                       Navigator.pushNamed(context, '/creatormaintabview');
+                      Navigator.pushNamed(context, '/creatormaintabview');
                     },
                   ),
                   const SizedBox(
@@ -178,7 +182,10 @@ class _CreatorLoginViewState extends State<CreatorLoginView> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await AuthService().signInWithGoogle();
+                          Navigator.pushNamed(context, '/creatormaintabview');
+                        },
                         icon: Image.asset(
                           "assets/img/google_btn.png",
                           width: 45,
@@ -190,7 +197,6 @@ class _CreatorLoginViewState extends State<CreatorLoginView> {
                   const SizedBox(
                     height: 30,
                   ),
-
                   Text(
                     "Don’t have an account?",
                     style: TextStyle(
@@ -198,10 +204,13 @@ class _CreatorLoginViewState extends State<CreatorLoginView> {
                         fontSize: 14,
                         fontWeight: FontWeight.w400),
                   ),
-
                   TextButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const CreatorRegisterView() ));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const CreatorRegisterView()));
                     },
                     child: Text(
                       "REGISTER",
