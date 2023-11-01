@@ -3,6 +3,7 @@ import 'package:ott_platform_app/user_view/login/register_view.dart';
 import '../../common/color_extension.dart';
 import '../../common_widget/round_button.dart';
 import '../../common_widget/round_text_field.dart';
+import 'package:ott_platform_app/main.dart';
 
 class AdminLoginView extends StatefulWidget {
   const AdminLoginView({super.key});
@@ -92,7 +93,7 @@ class _AdminLoginViewState extends State<AdminLoginView> {
                     hintText: "password here",
                     obscureText: true,
                     controller: txtPassword,
-                   /* right: TextButton(
+                    /* right: TextButton(
                       onPressed: () {
                          Navigator.push(
                             context,
@@ -114,10 +115,9 @@ class _AdminLoginViewState extends State<AdminLoginView> {
                   RoundButton(
                     title: "LOGIN",
                     onPressed: () {
-                       Navigator.pushNamed(context, '/adminmaintabview');
+                      Navigator.pushNamed(context, '/VideoListScreen');
                     },
                   ),
-
                 ],
               ),
             ),

@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ott_platform_app/google_auth.dart';
+import 'package:ott_platform_app/signin_backend/sendinguser.dart';
 import 'package:ott_platform_app/user_view/main_tab/main_tab_view.dart';
-
+import 'package:ott_platform_app/signin_backend/userstruct.dart';
 import '../../common/color_extension.dart';
 import '../../common_widget/round_button.dart';
 import '../../common_widget/round_text_field.dart';
@@ -24,6 +26,16 @@ class _RegisterViewState extends State<RegisterView> {
 
   final ImagePicker picker = ImagePicker();
   XFile? image;
+
+  final AuthService1 authService = AuthService1();
+  void signUpUser() {
+    authService.signUpUser(
+        context: context,
+        email: txtEmail.text,
+        name: txtFirstName.text + txtLastName.text,
+        password: txtPassword.text,
+        confirmpassword: txtConfirmPassword.text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +103,7 @@ class _RegisterViewState extends State<RegisterView> {
                         image =
                             await picker.pickImage(source: ImageSource.gallery);
 
-                            setState(() {
-                              
-                            });
+                        setState(() {});
                       },
                       child: Container(
                         padding: const EdgeInsets.all(4),
@@ -146,7 +156,7 @@ class _RegisterViewState extends State<RegisterView> {
                 RoundTextField(
                   title: "FIRST NAME",
                   hintText: "first name here",
-                  controller: txtEmail,
+                  controller: txtFirstName,
                 ),
                 const SizedBox(
                   height: 20,
@@ -154,7 +164,7 @@ class _RegisterViewState extends State<RegisterView> {
                 RoundTextField(
                   title: "LAST NAME",
                   hintText: "last name here",
-                  controller: txtEmail,
+                  controller: txtLastName,
                 ),
                 const SizedBox(
                   height: 20,
@@ -181,7 +191,7 @@ class _RegisterViewState extends State<RegisterView> {
                   title: "CONFIRM PASSWORD",
                   hintText: "confirm password here",
                   obscureText: true,
-                  controller: txtPassword,
+                  controller: txtConfirmPassword,
                 ),
                 const SizedBox(
                   height: 30,
@@ -189,8 +199,7 @@ class _RegisterViewState extends State<RegisterView> {
                 RoundButton(
                   title: "REGISTER",
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const MainTabView() ));
-
+                    signUpUser();
                   },
                 ),
                 const SizedBox(

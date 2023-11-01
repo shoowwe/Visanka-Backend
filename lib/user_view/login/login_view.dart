@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ott_platform_app/google_auth.dart';
 import 'package:ott_platform_app/user_view/login/register_view.dart';
 import 'package:ott_platform_app/user_view/main_tab/main_tab_view.dart';
-
+import 'package:ott_platform_app/signin_backend/sendinguser.dart';
 import '../../common/color_extension.dart';
 import '../../common_widget/round_button.dart';
 import '../../common_widget/round_text_field.dart';
@@ -18,6 +18,15 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
+
+  final AuthService1 authService = AuthService1();
+  void signInUser() {
+    authService.signInUser(
+      context: context,
+      email: txtEmail.text,
+      password: txtPassword.text,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +141,7 @@ class _LoginViewState extends State<LoginView> {
                   RoundButton(
                     title: "LOGIN",
                     onPressed: () {
-                      Navigator.pushNamed(context, '/maintabview');
+                      signInUser();
                     },
                   ),
                   const SizedBox(

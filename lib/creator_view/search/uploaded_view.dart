@@ -1,6 +1,6 @@
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
-
+import 'package:ott_platform_app/upload_videos/uploading_videos.dart';
 import '../../common/color_extension.dart';
 import '../../common_widget/round_text_field.dart';
 
@@ -12,6 +12,7 @@ class UploadedView extends StatefulWidget {
 }
 
 class _UploadedViewState extends State<UploadedView> {
+  final uploadVideo = videoUpload();
   TextEditingController txtSearch = TextEditingController();
   List searchArr = [
     {
@@ -20,10 +21,7 @@ class _UploadedViewState extends State<UploadedView> {
     },
     {
       "name": "MOVIES",
-      "list": [
-        "assets/img/search_2.png",
-            "assets/img/search_3.png"
-      ]
+      "list": ["assets/img/search_2.png", "assets/img/search_3.png"]
     }
   ];
 
@@ -64,6 +62,14 @@ class _UploadedViewState extends State<UploadedView> {
                   )),
             ),
           ),
+          SizedBox(
+            height: 10,
+          ),
+          OutlinedButton(
+              onPressed: () {
+                uploadVideo.selectVideo(context);
+              },
+              child: Text("upload video")),
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 15),
@@ -99,46 +105,40 @@ class _UploadedViewState extends State<UploadedView> {
                           ],
                         ),
                       ),
-              SizedBox(
-                    height: (media.width * 0.4) ,
-                    child:
-                       ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: sArr.length,
-                          itemBuilder: (context, index) {
-                           
-
-                            return InkWell(
-                              onTap: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             const CastDetailsView()));
-                              },
-                              child: 
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 6),
-                                    color: TColor.castBG,
-                                    width: media.width * 0.25,
-                                    height: media.width * 0.32,
-                                    child:ClipRect(
-                                            child: Image.asset(
-                                              sArr[index].toString(),
-                                              width: media.width * 0.25,
-                                              height: media.width * 0.32,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          )
-                                        ,
+                      SizedBox(
+                        height: (media.width * 0.4),
+                        child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: sArr.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) =>
+                                  //             const CastDetailsView()));
+                                },
+                                child: Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 6),
+                                  color: TColor.castBG,
+                                  width: media.width * 0.25,
+                                  height: media.width * 0.32,
+                                  child: ClipRect(
+                                    child: Image.asset(
+                                      sArr[index].toString(),
+                                      width: media.width * 0.25,
+                                      height: media.width * 0.32,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                  
-                               
-                            );
-                          }),),
+                                ),
+                              );
+                            }),
+                      ),
                     ],
                   ),
                 );
