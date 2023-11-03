@@ -7,7 +7,18 @@ const bcrypt = require('bcrypt');
 const util = require('util');  // Import the util module
 const jwt= require('jsonwebtoken');
 //const conn =  require('../sftpserver');
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/'); // Specifies that uploaded files will be stored in the 'uploads/' directory
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.originalname); // Uses the original file name for storing the file
+    }
+  });
+  
 
+const upload = multer({ storage: storage });
 const db = mysql.createPool({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
@@ -100,42 +111,45 @@ function validateEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 };
-router.route("/creator/content").post(async (req, res) => {
-    var { videoPath , filename} = req.body;
-    console.
-    console.log(req.body)
+router.route("/creator/content").post(upload.single('file'),async (req, res) => {
+    const {path} = req.file;
+    const {originalname} =req.file;
     try {
-        const dir = '/data/user'; // Updated directory path
-
-        // Check if the directory exists, if not, create it
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
-        }
-            await sftp.connect({
+        const dir = '/data/user'; 
+           await sftp.connect({
               host: '0.0.0.0',
               port: 22,
               username: 'mohd shoeib',
               password: '24samshoeib',
             });
-        const remoteFilePath = `${dir}/${filename}`;
+            sftp.mkdir(dir,true);
+        const remoteFilePath = `${dir}/${originalname}`;
 
-        //const [results] = await db.query(`select title from videos where title=?`, [title]);
-        
-        await sftp.put(fs.createReadStream(videoPath), remoteFilePath);
+        const [results] = await db.query(`select title from videos where title=?`, [originalname]);
+        if(result.length==0){
+        try{
+        await sftp.put(fs.createReadStream(path), remoteFilePath);}
+        catch{
+            throw new Error('error uploading the file');
+        }
         console.log('file got put');
-        const exists = await sftp.exists(remoteFilePath);
+       
+        const exists = sftp.exists(remoteFilePath);
         if (exists) {
-            const video = await insertVideosintodb(filename,videoPath); // Assuming insertVideosintodb is a function for database operation
+            const video = await insertVideosintodb(originalname,remoteFilePath); // Assuming insertVideosintodb is a function for database operation
             return res.status(200).json({ msg: `File got added ${video}` });
         } else {
             throw new Error('File did not get uploaded');
+        }}else{
+            return res.status(200).json({msg:"file already exists"
+            });
         }
    
     } catch (error) {
         console.error(error);
         return res.status(500).json({ msg: "Internal server error" });
     } finally {
-        await sftp.end(); // Make sure to close the connection
+       sftp.end(); // Make sure to close the connection
     }
 });
 router.route("/getcontent").get(async (req,res) => {

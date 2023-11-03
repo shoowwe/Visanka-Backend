@@ -13,8 +13,7 @@ class sendingVideo {
       required String title,
       // ignore: non_constant_identifier_names
       required String file_path}) async {
-    videoStruct video =
-        videoStruct(id: ' ', title: title, file_path: file_path);
+    videoStruct video = videoStruct(id: '', title: title, file_path: file_path);
     print(title);
     print(file_path);
     http.Response res = await http.post(Uri.parse('$uri/creator/content'),

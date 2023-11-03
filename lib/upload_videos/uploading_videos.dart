@@ -21,23 +21,18 @@ class videoUpload {
     if (result != null) {
       PlatformFile file = result.files.first;
       videoPath = file.path;
-      var filename = file.name;
-      var request =
-          http.MultipartRequest('POST', Uri.parse('$uri/creator/content'));
-
-      request.fields['videoPath'] = videoPath;
-      request.fields['filename'] = filename;
-
-      // Add the file
-      request.files.add(file as http.MultipartFile);
-
-      var response = await request.send();
-
-      if (response.statusCode == 200) {
-        print('Uploaded!');
-      } else {
-        print('Upload failed');
-      }
+      print(videoPath);
+      FormData formData = FormData.fromMap({
+        "file": await MultipartFile.fromFile(videoPath, filename: file.name),
+      });
+      Dio dio = Dio();
+      await dio.post(
+        "http://192.168.0.103:3000/creator/content", // Replace with your Node.js server URL
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+        ),
+      );
     } else {
       // User canceled the picker
     }
