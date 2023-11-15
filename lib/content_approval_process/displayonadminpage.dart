@@ -1,36 +1,59 @@
-import 'package:ott_platform_app/content_approval_process/getcontent.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
-import 'package:ott_platform_app/content_approval_process/getcontent.dart';
+class VideoPlayerScreen extends StatefulWidget {
+  final String videoPath;
 
-class VideoListScreen extends StatelessWidget {
-  const VideoListScreen({Key? key}) : super(key: key);
+  VideoPlayerScreen(this.videoPath);
+
+  @override
+  _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
+}
+
+class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.videoPath)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: fetchVideos(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show loading indicator
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          List<Map<String, dynamic>> videos = snapshot.data!;
-          return ListView.builder(
-            itemCount: videos.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(videos[index]
-                    ['title']), // Assuming 'title' is the video title column
-                onTap: () {
-                  // Implement logic to play video
-                },
-              );
-            },
-          );
-        }
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Video Player'),
+      ),
+      body: Center(
+        child: _controller.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              )
+            : CircularProgressIndicator(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _controller.value.isPlaying
+                ? _controller.pause()
+                : _controller.play();
+          });
+        },
+        child: Icon(
+          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+        ),
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 }

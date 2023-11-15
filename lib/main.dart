@@ -3,7 +3,7 @@ import 'package:ott_platform_app/admin/admin_login_view.dart';
 import 'package:ott_platform_app/admin/admin_screen.dart';
 import 'package:ott_platform_app/admin/main_tab/admin_main_tab_view.dart';
 import 'package:ott_platform_app/common_widget/checkout1.dart';
-import 'package:ott_platform_app/content_approval_process/displayonadminpage.dart';
+import 'package:ott_platform_app/content_approval_process/getcontent.dart';
 import 'package:ott_platform_app/creator_view/login/creator_login_view.dart';
 import 'package:ott_platform_app/creator_view/login/creator_register_view.dart';
 import 'package:ott_platform_app/creator_view/main_tab/creator_main_tab_view.dart';
@@ -49,7 +49,8 @@ class MyApp extends StatelessWidget {
         '/adminloginview': (context) => AdminLoginView(),
         '/adminmaintabview': (context) => AdminMainTabView(),
         '/checkout': (context) => CheckoutOnePage(),
-        '/videoListScreen': (context) => VideoListScreen(),
+        '/videoListScreen': (context) =>
+            VideoListScreen(context as List<String>),
       },
     );
   }

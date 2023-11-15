@@ -27,7 +27,7 @@ class videoUpload {
       });
       Dio dio = Dio();
       await dio.post(
-        "http://192.168.0.103:3000/creator/content", // Replace with your Node.js server URL
+        "http://192.168.0.102:3000/creator/content", // Replace with your Node.js server URL
         data: formData,
         options: Options(
           contentType: 'multipart/form-data',

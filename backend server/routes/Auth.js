@@ -126,7 +126,7 @@ router.route("/creator/content").post(upload.single('file'),async (req, res) => 
         const remoteFilePath = `${dir}/${originalname}`;
 
         const [results] = await db.query(`select title from videos where title=?`, [originalname]);
-        if(result.length==0){
+        if(results.length==0){
         try{
         await sftp.put(fs.createReadStream(path), remoteFilePath);}
         catch{
@@ -152,18 +152,54 @@ router.route("/creator/content").post(upload.single('file'),async (req, res) => 
        sftp.end(); // Make sure to close the connection
     }
 });
-router.route("/getcontent").get(async (req,res) => {
-    try{
-    const [result] = await db.query(`select * from videos`);
-    if(result.length ==0){
-        return res.status(400).json({msg:"Database is empty"});
+router.route("/getcontent").get(async (req, res) => {
+
+    try {
+        var [results] = await db.query(`select * from videos`);
+        console.log(results.length);
+        if (results.length == 0) {
+            return res.status(404).json({ msg: 'NO files exists' });
+        }
+
+        await sftp.connect({
+            host: '0.0.0.0',
+            port: 22,
+            username: 'mohd shoeib',
+            password: '24samshoeib',
+        });
+
+        var videos = [];
+        for (const video of results) {
+            const exists = await sftp.exists(video.file_path);
+            if (exists) {
+                const path = await sftp.get(video.file_path);
+                if (path) {
+                    videos.push(path);
+                }
+            }
+        }
+        const videosPaths = videos.map(path => {
+            const stat = fs.statSync(path);
+            const fileSize = stat.size;
+            const videoStream = fs.createReadStream(path);
+        
+            return {
+              fileSize,
+              videoStream,
+            };
+          });
+        
+        return  res.status(200).json({ videosPaths });
+
+    } catch (error) {
+        return res.status(500).json({ msg: error.message });
+    } finally {
+        sftp.end();
     }
-    return res.status(200).json(result);
-    }
-    catch(e){
-        return res.status(500).json({msg:`${e.message}`});
-    }
-})
+
+});
+
+
 async function insertVideosintodb(title,file_path){
     try{
         const [result] =  await db.query(` Insert into videos(title,file_path) VALUES (?,?)`,
